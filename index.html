@@ -13,131 +13,123 @@
   <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --bg: #0a0a0f; --bg2: #12121a; --bg3: #1a1a26;
-      --border: rgba(255,255,255,0.08); --accent: #00ff88;
-      --red: #ff4466; --text: #f0f0f5; --muted: rgba(240,240,245,0.45);
-      --card: rgba(255,255,255,0.04); --radius: 16px;
+      --bg:#0a0a0f;--bg2:#12121a;--bg3:#1a1a26;
+      --border:rgba(255,255,255,0.08);--accent:#00ff88;
+      --red:#ff4466;--text:#f0f0f5;--muted:rgba(240,240,245,0.45);
+      --card:rgba(255,255,255,0.04);--radius:16px;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-    html, body { height: 100%; background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; overflow-x: hidden; }
+    *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+    html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;overflow-x:hidden}
+    #splash{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:100;transition:opacity 0.5s}
+    #splash.hide{opacity:0;pointer-events:none}
+    .splash-logo{font-family:'Space Mono',monospace;font-size:32px;color:var(--accent);letter-spacing:-1px;margin-bottom:8px}
+    .splash-sub{font-size:13px;color:var(--muted);letter-spacing:2px;text-transform:uppercase}
+    .splash-bar{width:120px;height:2px;background:var(--bg3);border-radius:2px;margin-top:32px;overflow:hidden}
+    .splash-fill{height:100%;background:var(--accent);animation:fillbar 1.5s ease forwards}
+    @keyframes fillbar{from{width:0}to{width:100%}}
+    #app{min-height:100dvh;display:flex;flex-direction:column}
+    header{padding:52px 20px 16px;background:linear-gradient(180deg,rgba(0,255,136,0.06) 0%,transparent 100%);border-bottom:1px solid var(--border)}
+    .header-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
+    .logo{font-family:'Space Mono',monospace;font-size:18px;color:var(--accent)}
+    .hbadge{font-size:10px;background:rgba(0,255,136,0.12);color:var(--accent);padding:3px 8px;border-radius:20px;border:1px solid rgba(0,255,136,0.2);letter-spacing:1px;text-transform:uppercase}
+    .header-sub{font-size:12px;color:var(--muted)}
+    .content{flex:1;padding:20px;display:flex;flex-direction:column;gap:16px}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px}
+    .card-title{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:14px;font-family:'Space Mono',monospace}
+    .field{margin-bottom:12px}
+    .field label{font-size:11px;color:var(--muted);display:block;margin-bottom:6px;text-transform:uppercase;letter-spacing:1px}
+    input,select{width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;padding:12px 14px;outline:none;transition:border-color 0.2s;appearance:none;-webkit-appearance:none}
+    input:focus,select:focus{border-color:rgba(0,255,136,0.4)}
+    input::placeholder{color:var(--muted)}
+    .ticker-input{font-family:'Space Mono',monospace;font-size:18px;text-transform:uppercase;letter-spacing:2px}
+    .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .btn-analyze{width:100%;padding:16px;background:var(--accent);color:#000;border:none;border-radius:12px;font-family:'Space Mono',monospace;font-size:14px;font-weight:700;letter-spacing:1px;cursor:pointer;transition:all 0.2s;margin-top:4px}
+    .btn-analyze:active{transform:scale(0.97)}
+    .btn-analyze:disabled{opacity:0.4;cursor:not-allowed}
 
-    #splash { position: fixed; inset: 0; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 100; transition: opacity 0.5s ease; }
-    #splash.hide { opacity: 0; pointer-events: none; }
-    .splash-logo { font-family: 'Space Mono', monospace; font-size: 32px; color: var(--accent); letter-spacing: -1px; margin-bottom: 8px; }
-    .splash-sub { font-size: 13px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; }
-    .splash-bar { width: 120px; height: 2px; background: var(--bg3); border-radius: 2px; margin-top: 32px; overflow: hidden; }
-    .splash-fill { height: 100%; background: var(--accent); animation: fillbar 1.5s ease forwards; }
-    @keyframes fillbar { from{width:0} to{width:100%} }
+    /* LOADING */
+    .loading{display:none;align-items:center;gap:12px;padding:16px}
+    .loading.show{display:flex}
+    .dots{display:flex;gap:5px}
+    .dots span{width:7px;height:7px;border-radius:50%;background:var(--accent);animation:dp 1.2s infinite}
+    .dots span:nth-child(2){animation-delay:.2s}.dots span:nth-child(3){animation-delay:.4s}
+    @keyframes dp{0%,80%,100%{opacity:.15;transform:scale(0.8)}40%{opacity:1;transform:scale(1)}}
+    .loading-txt{font-size:13px;color:var(--muted)}
 
-    #app { min-height: 100dvh; display: flex; flex-direction: column; }
-
-    header { padding: 52px 20px 16px; background: linear-gradient(180deg, rgba(0,255,136,0.06) 0%, transparent 100%); border-bottom: 1px solid var(--border); }
-    .header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
-    .logo { font-family: 'Space Mono', monospace; font-size: 18px; color: var(--accent); }
-    .badge { font-size: 10px; background: rgba(0,255,136,0.12); color: var(--accent); padding: 3px 8px; border-radius: 20px; border: 1px solid rgba(0,255,136,0.2); letter-spacing: 1px; text-transform: uppercase; }
-    .header-sub { font-size: 12px; color: var(--muted); }
-
-    .content { flex: 1; padding: 20px; display: flex; flex-direction: column; gap: 16px; }
-
-    .card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; }
-    .card-title { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 14px; font-family: 'Space Mono', monospace; }
-
-    .field { margin-bottom: 12px; }
-    .field label { font-size: 11px; color: var(--muted); display: block; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 1px; }
-    input, select { width: 100%; background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 15px; padding: 12px 14px; outline: none; transition: border-color 0.2s; appearance: none; -webkit-appearance: none; }
-    input:focus, select:focus { border-color: rgba(0,255,136,0.4); }
-    input::placeholder { color: var(--muted); }
-    .ticker-input { font-family: 'Space Mono', monospace; font-size: 18px; text-transform: uppercase; letter-spacing: 2px; }
-    .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-
-    .btn-analyze { width: 100%; padding: 16px; background: var(--accent); color: #000; border: none; border-radius: 12px; font-family: 'Space Mono', monospace; font-size: 14px; font-weight: 700; letter-spacing: 1px; cursor: pointer; transition: all 0.2s; margin-top: 4px; }
-    .btn-analyze:active { transform: scale(0.97); }
-
-    /* INSTRUCCIONES */
-    .instructions { background: rgba(0,255,136,0.04); border: 1px solid rgba(0,255,136,0.15); border-radius: var(--radius); padding: 18px; display: none; }
-    .instructions.show { display: block; }
-    .inst-title { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--accent); margin-bottom: 12px; letter-spacing: 1px; }
-    .inst-step { display: flex; gap: 12px; margin-bottom: 12px; align-items: flex-start; }
-    .inst-num { background: var(--accent); color: #000; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; flex-shrink: 0; font-family: 'Space Mono', monospace; }
-    .inst-txt { font-size: 13px; color: rgba(240,240,245,0.8); line-height: 1.6; }
-    .inst-txt strong { color: var(--accent); }
-
-    .prompt-box { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 12px; margin-top: 10px; font-size: 12px; color: var(--muted); font-family: 'Space Mono', monospace; line-height: 1.6; word-break: break-all; display: none; }
-    .prompt-box.show { display: block; }
-
-    .copy-btn { width: 100%; padding: 12px; background: transparent; border: 1px solid rgba(0,255,136,0.3); border-radius: 10px; color: var(--accent); font-family: 'Space Mono', monospace; font-size: 12px; cursor: pointer; margin-top: 8px; transition: all 0.2s; }
-    .copy-btn:active { background: rgba(0,255,136,0.1); }
+    /* RESULT */
+    #result{display:none}
+    #result.show{display:flex;flex-direction:column;gap:12px}
+    .rec-card{border-radius:var(--radius);padding:20px;position:relative;overflow:hidden}
+    .rec-call{background:linear-gradient(135deg,rgba(0,255,136,0.12),rgba(0,255,136,0.04));border:1px solid rgba(0,255,136,0.25)}
+    .rec-put{background:linear-gradient(135deg,rgba(255,68,102,0.12),rgba(255,68,102,0.04));border:1px solid rgba(255,68,102,0.25)}
+    .rec-neutral{background:linear-gradient(135deg,rgba(0,196,255,0.12),rgba(0,196,255,0.04));border:1px solid rgba(0,196,255,0.25)}
+    .rec-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+    .rec-ticker{font-family:'Space Mono',monospace;font-size:22px;font-weight:700}
+    .rec-badge{font-family:'Space Mono',monospace;font-size:13px;font-weight:700;padding:5px 14px;border-radius:20px}
+    .badge-call{background:rgba(0,255,136,0.2);color:var(--accent);border:1px solid rgba(0,255,136,0.3)}
+    .badge-put{background:rgba(255,68,102,0.2);color:var(--red);border:1px solid rgba(255,68,102,0.3)}
+    .badge-neutral{background:rgba(0,196,255,0.2);color:#00c4ff;border:1px solid rgba(0,196,255,0.3)}
+    .rec-price{font-family:'Space Mono',monospace;font-size:28px;font-weight:700;margin-bottom:4px}
+    .rec-trend{font-size:12px;color:var(--muted)}
+    .conf-wrap{margin-top:14px}
+    .conf-label{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:6px}
+    .conf-track{height:4px;background:rgba(255,255,255,0.08);border-radius:2px;overflow:hidden}
+    .conf-fill{height:100%;border-radius:2px;transition:width 1s ease}
+    .option-box{background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:12px;padding:14px}
+    .option-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+    .opt-item{display:flex;flex-direction:column;gap:3px}
+    .opt-key{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
+    .opt-val{font-family:'Space Mono',monospace;font-size:14px;font-weight:700}
+    .exit-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .exit-card{border-radius:12px;padding:14px;text-align:center}
+    .exit-tp{background:rgba(0,255,136,0.06);border:1px solid rgba(0,255,136,0.2)}
+    .exit-sl{background:rgba(255,68,102,0.06);border:1px solid rgba(255,68,102,0.2)}
+    .exit-label{font-size:10px;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+    .exit-tp .exit-label{color:var(--accent)}
+    .exit-sl .exit-label{color:var(--red)}
+    .exit-price{font-family:'Space Mono',monospace;font-size:18px;font-weight:700}
+    .exit-pct{font-size:11px;color:var(--muted);margin-top:2px}
+    .risk-wrap{margin-top:4px}
+    .risk-label-row{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:6px}
+    .risk-track{height:6px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden}
+    .risk-fill{height:100%;border-radius:3px;transition:width 1s ease}
+    .analysis-txt{font-size:13px;color:rgba(240,240,245,0.75);line-height:1.7}
+    .cat-list{list-style:none;display:flex;flex-direction:column;gap:6px;margin-top:6px}
+    .cat-list li{font-size:13px;color:rgba(240,240,245,0.75);padding-left:16px;position:relative;line-height:1.5}
+    .cat-list li::before{content:'→';position:absolute;left:0;color:var(--accent);font-size:11px;top:2px}
+    .risk-list li::before{color:var(--red)}
 
     /* HISTORY */
-    #page-history { display: none; }
-    #page-history.active { display: block; }
-    #page-form.hidden { display: none; }
-
-    .history-empty { text-align: center; padding: 40px 20px; color: var(--muted); font-size: 13px; }
-    .hist-item { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 14px; margin-bottom: 10px; }
-    .hist-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
-    .hist-ticker { font-family: 'Space Mono', monospace; font-size: 16px; font-weight: 700; }
-    .hist-date { font-size: 11px; color: var(--muted); }
-    .hist-tags { display: flex; gap: 6px; flex-wrap: wrap; }
-    .hist-tag { font-size: 11px; padding: 3px 10px; border-radius: 20px; font-family: 'Space Mono', monospace; }
-    .tag-call { background: rgba(0,255,136,0.15); color: var(--accent); }
-    .tag-put { background: rgba(255,68,102,0.15); color: var(--red); }
-    .tag-info { background: rgba(255,255,255,0.05); color: var(--muted); }
-
-    .bottom-nav { position: sticky; bottom: 0; background: rgba(10,10,15,0.97); backdrop-filter: blur(20px); border-top: 1px solid var(--border); display: flex; padding: 8px 20px; padding-bottom: max(8px, env(safe-area-inset-bottom)); gap: 4px; }
-    .nav-btn { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 8px; border-radius: 10px; border: none; background: transparent; color: var(--muted); font-size: 10px; font-family: 'DM Sans', sans-serif; cursor: pointer; transition: all 0.2s; }
-    .nav-btn.active { color: var(--accent); background: rgba(0,255,136,0.08); }
-    .nav-btn svg { width: 20px; height: 20px; }
-
-    .fade-in { animation: fadeIn 0.4s ease forwards; }
-    @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
-    ::-webkit-scrollbar { width: 0; }
+    #page-history{display:none}
+    #page-history.active{display:block}
+    #page-form.hidden{display:none}
+    .history-empty{text-align:center;padding:40px 20px;color:var(--muted);font-size:13px}
+    .hist-item{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px}
+    .hist-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+    .hist-ticker{font-family:'Space Mono',monospace;font-size:16px;font-weight:700}
+    .hist-date{font-size:11px;color:var(--muted)}
+    .hist-tags{display:flex;gap:6px;flex-wrap:wrap}
+    .hist-tag{font-size:11px;padding:3px 10px;border-radius:20px;font-family:'Space Mono',monospace}
+    .tag-call{background:rgba(0,255,136,0.15);color:var(--accent)}
+    .tag-put{background:rgba(255,68,102,0.15);color:var(--red)}
+    .tag-info{background:rgba(255,255,255,0.05);color:var(--muted)}
 
     /* FOOTER */
-    .app-footer {
-      padding: 24px 20px 32px;
-      border-top: 1px solid var(--border);
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-    .legal-box {
-      background: rgba(255,255,255,0.02);
-      border: 1px solid rgba(255,255,255,0.06);
-      border-radius: 12px;
-      padding: 14px 16px;
-    }
-    .legal-title {
-      font-family: 'Space Mono', monospace;
-      font-size: 10px;
-      color: rgba(240,240,245,0.3);
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
-      margin-bottom: 8px;
-    }
-    .legal-text {
-      font-size: 11px;
-      color: rgba(240,240,245,0.35);
-      line-height: 1.7;
-    }
-    .designer-line {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      font-size: 11px;
-      color: rgba(240,240,245,0.25);
-      font-family: 'Space Mono', monospace;
-    }
-    .designer-name {
-      color: rgba(0,255,136,0.5);
-      font-weight: 700;
-    }
-    .designer-dot {
-      width: 3px; height: 3px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.15);
-    }
+    .app-footer{padding:24px 20px 32px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:16px}
+    .legal-box{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:14px 16px}
+    .legal-title{font-family:'Space Mono',monospace;font-size:10px;color:rgba(240,240,245,0.3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px}
+    .legal-text{font-size:11px;color:rgba(240,240,245,0.35);line-height:1.7}
+    .designer-line{display:flex;align-items:center;justify-content:center;gap:6px;font-size:11px;color:rgba(240,240,245,0.25);font-family:'Space Mono',monospace}
+    .designer-name{color:rgba(0,255,136,0.5);font-weight:700}
+    .designer-dot{width:3px;height:3px;border-radius:50%;background:rgba(255,255,255,0.15)}
+
+    .bottom-nav{position:sticky;bottom:0;background:rgba(10,10,15,0.97);backdrop-filter:blur(20px);border-top:1px solid var(--border);display:flex;padding:8px 20px;padding-bottom:max(8px,env(safe-area-inset-bottom));gap:4px}
+    .nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px;border-radius:10px;border:none;background:transparent;color:var(--muted);font-size:10px;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all 0.2s}
+    .nav-btn.active{color:var(--accent);background:rgba(0,255,136,0.08)}
+    .nav-btn svg{width:20px;height:20px}
+    .fade-in{animation:fadeIn 0.4s ease forwards}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+    ::-webkit-scrollbar{width:0}
   </style>
 </head>
 <body>
@@ -152,22 +144,19 @@
   <header>
     <div class="header-top">
       <div class="logo">OPTIONS_AI</div>
-      <div class="badge">Weekly</div>
+      <div class="hbadge">Weekly</div>
     </div>
     <div class="header-sub">Opciones semanales con IA · Potenciado por Claude</div>
   </header>
 
-  <!-- FORM PAGE -->
   <div id="page-form">
     <div class="content">
       <div class="card fade-in">
         <div class="card-title">Nueva Análisis</div>
-
         <div class="field">
           <label>Ticker</label>
           <input class="ticker-input" id="tk" type="text" placeholder="AAPL" maxlength="6" autocomplete="off" autocorrect="off" spellcheck="false" />
         </div>
-
         <div class="row2">
           <div class="field">
             <label>Riesgo</label>
@@ -182,7 +171,6 @@
             <input type="number" id="ct" value="2" min="1" max="100" />
           </div>
         </div>
-
         <div class="row2">
           <div class="field">
             <label>Tipo</label>
@@ -197,63 +185,18 @@
             <input type="text" id="cap" placeholder="$500" />
           </div>
         </div>
-
-        <button class="btn-analyze" onclick="generate()">GENERAR ANÁLISIS →</button>
+        <button class="btn-analyze" id="btnAnalyze" onclick="analyze()">ANALIZAR →</button>
       </div>
 
-      <!-- INSTRUCCIONES -->
-      <div class="instructions fade-in" id="instructions">
-        <div class="inst-title">¿CÓMO OBTENER TU ANÁLISIS?</div>
-
-        <div class="inst-step">
-          <div class="inst-num">1</div>
-          <div class="inst-txt">Copia el mensaje de abajo con el botón <strong>COPIAR</strong></div>
-        </div>
-        <div class="inst-step">
-          <div class="inst-num">2</div>
-          <div class="inst-txt">Abre <strong>Claude.ai</strong> en tu navegador o app</div>
-        </div>
-        <div class="inst-step">
-          <div class="inst-num">3</div>
-          <div class="inst-txt">Pega el mensaje y envíalo — Claude te da el análisis completo</div>
-        </div>
-        <div class="inst-step">
-          <div class="inst-num">4</div>
-          <div class="inst-txt">Regresa aquí para guardar el resultado en tu historial</div>
-        </div>
-
-        <div class="prompt-box" id="promptBox"></div>
-        <button class="copy-btn" id="copyBtn" onclick="copyPrompt()">📋 COPIAR MENSAJE</button>
-
-        <div style="margin-top:16px;border-top:1px solid var(--border);padding-top:14px">
-          <div class="card-title" style="margin-bottom:10px">Guardar en historial</div>
-          <div class="row2">
-            <div class="field">
-              <label>Ticker</label>
-              <input type="text" id="h_ticker" readonly style="opacity:0.6" />
-            </div>
-            <div class="field">
-              <label>Rec. (CALL/PUT)</label>
-              <input type="text" id="h_rec" placeholder="CALL" style="text-transform:uppercase" />
-            </div>
-          </div>
-          <div class="row2">
-            <div class="field">
-              <label>Strike</label>
-              <input type="text" id="h_strike" placeholder="$295" />
-            </div>
-            <div class="field">
-              <label>Prima</label>
-              <input type="text" id="h_prima" placeholder="$2.50" />
-            </div>
-          </div>
-          <button class="copy-btn" onclick="saveHistory()" style="border-color:rgba(0,255,136,0.4);margin-top:4px">💾 GUARDAR EN HISTORIAL</button>
-        </div>
+      <div class="loading" id="loading">
+        <div class="dots"><span></span><span></span><span></span></div>
+        <div class="loading-txt" id="loadingTxt">Analizando mercado...</div>
       </div>
+
+      <div id="result"></div>
     </div>
   </div>
 
-  <!-- HISTORY PAGE -->
   <div id="page-history">
     <div class="content">
       <div class="card fade-in">
@@ -263,8 +206,7 @@
     </div>
   </div>
 
-  <!-- FOOTER -->
-  <footer class="app-footer" id="app-footer">
+  <footer class="app-footer">
     <div class="legal-box">
       <div class="legal-title">⚠ Aviso Legal Importante</div>
       <div class="legal-text">
@@ -296,9 +238,9 @@
 
 <script>
 setTimeout(() => document.getElementById('splash').classList.add('hide'), 1800);
-
 let history = JSON.parse(localStorage.getItem('optionsHistory') || '[]');
-let currentPrompt = '';
+const msgs = ['Analizando mercado...','Evaluando tendencias...','Calculando strikes...','Preparando recomendación...'];
+let msgIdx = 0, msgTimer;
 
 function showPage(page) {
   document.getElementById('page-form').classList.toggle('hidden', page !== 'form');
@@ -308,7 +250,7 @@ function showPage(page) {
   if (page === 'history') renderHistory();
 }
 
-function generate() {
+async function analyze() {
   const tk = document.getElementById('tk').value.trim().toUpperCase();
   const rk = document.getElementById('rk').value;
   const ct = document.getElementById('ct').value || '2';
@@ -316,91 +258,112 @@ function generate() {
   const cap = document.getElementById('cap').value || 'no especificado';
   if (!tk) { document.getElementById('tk').focus(); return; }
 
-  const today = new Date();
-  const exp = new Date(today); exp.setDate(today.getDate() + 7);
-  const expStr = exp.toLocaleDateString('es-MX', {day:'numeric',month:'short',year:'numeric'});
+  const btn = document.getElementById('btnAnalyze');
+  const loading = document.getElementById('loading');
+  const result = document.getElementById('result');
+  const loadingTxt = document.getElementById('loadingTxt');
 
-  currentPrompt = `Analiza la acción ${tk} y dame una recomendación de opción semanal (expiración máxima ${expStr}). Tipo: ${tipo}. Perfil de riesgo: ${rk}. Capital: ${cap}. Contratos: ${ct}. Incluye: 1) tendencia y sentimiento, 2) recomendación CALL o PUT con justificación, 3) strike exacto, 4) fecha de expiración, 5) prima estimada y costo total para ${ct} contratos, 6) análisis técnico (RSI, soporte/resistencia), 7) catalizadores de la semana, 8) nivel de riesgo del 1 al 10, 9) take profit +50% y stop loss -50%, 10) paso a paso para ejecutar en thinkorswim paperMoney.`;
+  btn.disabled = true;
+  loading.classList.add('show');
+  result.className = '';
+  result.innerHTML = '';
+  msgIdx = 0;
+  msgTimer = setInterval(() => { loadingTxt.textContent = msgs[msgIdx++ % msgs.length]; }, 2000);
 
-  document.getElementById('h_ticker').value = tk;
-  document.getElementById('promptBox').textContent = currentPrompt;
-  document.getElementById('promptBox').classList.add('show');
-  document.getElementById('instructions').classList.add('show');
+  try {
+    const res = await fetch('/api/analyze', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ticker: tk, riesgo: rk, contratos: ct, tipo, capital: cap })
+    });
+    const d = await res.json();
+    if (d.error) throw new Error(d.error);
 
-  document.getElementById('instructions').scrollIntoView({ behavior: 'smooth', block: 'start' });
-}
+    clearInterval(msgTimer);
+    loading.classList.remove('show');
 
-function copyPrompt() {
-  navigator.clipboard.writeText(currentPrompt).then(() => {
-    const btn = document.getElementById('copyBtn');
-    btn.textContent = '✅ COPIADO';
-    setTimeout(() => btn.textContent = '📋 COPIAR MENSAJE', 2000);
-  }).catch(() => {
-    const box = document.getElementById('promptBox');
-    const range = document.createRange();
-    range.selectNode(box);
-    window.getSelection().removeAllRanges();
-    window.getSelection().addRange(range);
-    document.execCommand('copy');
-    const btn = document.getElementById('copyBtn');
-    btn.textContent = '✅ COPIADO';
-    setTimeout(() => btn.textContent = '📋 COPIAR MENSAJE', 2000);
-  });
-}
+    const rc = d.recomendacion === 'CALL' ? 'call' : d.recomendacion === 'PUT' ? 'put' : 'neutral';
+    const color = rc === 'call' ? 'var(--accent)' : rc === 'put' ? 'var(--red)' : '#00c4ff';
+    const riskColor = d.nivel_riesgo <= 3 ? 'var(--accent)' : d.nivel_riesgo <= 6 ? '#ffaa00' : 'var(--red)';
+    const cats = (d.catalistas||[]).map(c=>`<li>${c}</li>`).join('');
+    const risks = (d.riesgos||[]).map(r=>`<li>${r}</li>`).join('');
+    const tendArrow = d.tendencia==='Alcista'?'↑':d.tendencia==='Bajista'?'↓':'→';
 
-function saveHistory() {
-  const ticker = document.getElementById('h_ticker').value.trim().toUpperCase();
-  const rec = document.getElementById('h_rec').value.trim().toUpperCase();
-  const strike = document.getElementById('h_strike').value.trim();
-  const prima = document.getElementById('h_prima').value.trim();
-  if (!ticker || !rec) { alert('Llena al menos el ticker y la recomendación (CALL/PUT)'); return; }
+    result.className = 'show';
+    result.innerHTML = `
+      <div class="rec-card rec-${rc} fade-in">
+        <div class="rec-top">
+          <div class="rec-ticker">${d.ticker}</div>
+          <div class="rec-badge badge-${rc}">${d.recomendacion}</div>
+        </div>
+        <div class="rec-price">${d.precio_actual}</div>
+        <div class="rec-trend">${tendArrow} ${d.tendencia} · ${d.sentimiento}</div>
+        <div class="conf-wrap">
+          <div class="conf-label"><span>Confianza</span><span style="color:${color}">${d.confianza}%</span></div>
+          <div class="conf-track"><div class="conf-fill" style="width:${d.confianza}%;background:${color}"></div></div>
+        </div>
+      </div>
+      <div class="card fade-in">
+        <div class="card-title" style="color:${color}">Opción recomendada</div>
+        <div class="option-box">
+          <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Strike · Expiración</div>
+          <div style="font-family:'Space Mono',monospace;font-size:18px;font-weight:700;margin-bottom:10px">${d.strike} · ${d.expiracion}</div>
+          <div class="option-grid">
+            <div class="opt-item"><span class="opt-key">Prima/contrato</span><span class="opt-val">${d.prima}</span></div>
+            <div class="opt-item"><span class="opt-key">Costo total</span><span class="opt-val">${d.costo_total}</span></div>
+            <div class="opt-item"><span class="opt-key">Contratos</span><span class="opt-val">${ct}</span></div>
+            <div class="opt-item"><span class="opt-key">Perfil</span><span class="opt-val" style="text-transform:capitalize">${rk}</span></div>
+          </div>
+        </div>
+        <div class="risk-wrap" style="margin-top:14px">
+          <div class="risk-label-row"><span>Nivel de riesgo</span><span style="color:${riskColor}">${d.nivel_riesgo}/10</span></div>
+          <div class="risk-track"><div class="risk-fill" style="width:${d.nivel_riesgo*10}%;background:${riskColor}"></div></div>
+        </div>
+      </div>
+      <div class="card fade-in">
+        <div class="card-title">Objetivos de salida</div>
+        <div class="exit-grid">
+          <div class="exit-card exit-tp"><div class="exit-label">Take Profit +50%</div><div class="exit-price" style="color:var(--accent)">${d.take_profit}</div><div class="exit-pct">Vende aquí ✓</div></div>
+          <div class="exit-card exit-sl"><div class="exit-label">Stop Loss -50%</div><div class="exit-price" style="color:var(--red)">${d.stop_loss}</div><div class="exit-pct">Cierra aquí ✗</div></div>
+        </div>
+      </div>
+      <div class="card fade-in"><div class="card-title">Justificación</div><div class="analysis-txt">${d.justificacion}</div></div>
+      <div class="card fade-in"><div class="card-title">Análisis técnico</div><div class="analysis-txt">${d.analisis_tecnico}</div></div>
+      <div class="card fade-in"><div class="card-title">Análisis fundamental</div><div class="analysis-txt">${d.analisis_fundamental}</div></div>
+      <div class="card fade-in"><div class="card-title" style="color:var(--accent)">Catalizadores</div><ul class="cat-list">${cats}</ul></div>
+      <div class="card fade-in"><div class="card-title" style="color:var(--red)">Riesgos</div><ul class="cat-list risk-list">${risks}</ul></div>`;
 
-  history.push({
-    ticker, rec, strike, prima,
-    riesgo: document.getElementById('rk').value,
-    contratos: document.getElementById('ct').value,
-    date: new Date().toLocaleDateString('es-MX')
-  });
-  if (history.length > 30) history.shift();
-  localStorage.setItem('optionsHistory', JSON.stringify(history));
+    history.push({ ticker: d.ticker, rec: d.recomendacion, strike: d.strike, prima: d.prima, riesgo: rk, contratos: ct, date: new Date().toLocaleDateString('es-MX') });
+    if (history.length > 30) history.shift();
+    localStorage.setItem('optionsHistory', JSON.stringify(history));
 
-  document.getElementById('h_rec').value = '';
-  document.getElementById('h_strike').value = '';
-  document.getElementById('h_prima').value = '';
-  document.getElementById('instructions').classList.remove('show');
-  document.getElementById('promptBox').classList.remove('show');
-
-  alert('✅ Guardado en historial');
+  } catch(e) {
+    clearInterval(msgTimer);
+    loading.classList.remove('show');
+    result.className = 'show';
+    result.innerHTML = `<div class="card fade-in"><div style="color:var(--red);font-size:14px">Error: ${e.message}</div></div>`;
+  }
+  btn.disabled = false;
 }
 
 function renderHistory() {
   const el = document.getElementById('historyContent');
-  if (history.length === 0) {
-    el.innerHTML = '<div class="history-empty">Sin análisis guardados aún.<br>Genera tu primer análisis para verlo aquí.</div>';
-    return;
-  }
-  el.innerHTML = history.slice().reverse().map((h, i) => `
+  if (!history.length) { el.innerHTML = '<div class="history-empty">Sin análisis guardados aún.</div>'; return; }
+  el.innerHTML = history.slice().reverse().map(h => `
     <div class="hist-item">
-      <div class="hist-top">
-        <div class="hist-ticker">${h.ticker}</div>
-        <div class="hist-date">${h.date}</div>
-      </div>
+      <div class="hist-top"><div class="hist-ticker">${h.ticker}</div><div class="hist-date">${h.date}</div></div>
       <div class="hist-tags">
         <span class="hist-tag ${h.rec==='CALL'?'tag-call':'tag-put'}">${h.rec}</span>
-        ${h.strike ? `<span class="hist-tag tag-info">Strike: ${h.strike}</span>` : ''}
-        ${h.prima ? `<span class="hist-tag tag-info">Prima: ${h.prima}</span>` : ''}
+        ${h.strike?`<span class="hist-tag tag-info">Strike: ${h.strike}</span>`:''}
+        ${h.prima?`<span class="hist-tag tag-info">Prima: ${h.prima}</span>`:''}
         <span class="hist-tag tag-info">${h.contratos} contratos</span>
       </div>
-    </div>
-  `).join('');
+    </div>`).join('');
 }
 
 document.getElementById('tk').addEventListener('input', e => { e.target.value = e.target.value.toUpperCase(); });
-document.getElementById('tk').addEventListener('keydown', e => { if(e.key==='Enter') generate(); });
-
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js').catch(()=>{});
-}
+document.getElementById('tk').addEventListener('keydown', e => { if(e.key==='Enter') analyze(); });
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
 </body>
 </html>
