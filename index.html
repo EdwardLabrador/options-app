@@ -12,12 +12,7 @@
   <title>OptionsAI</title>
   <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <style>
-    :root {
-      --bg:#0a0a0f;--bg2:#12121a;--bg3:#1a1a26;
-      --border:rgba(255,255,255,0.08);--accent:#00ff88;
-      --red:#ff4466;--text:#f0f0f5;--muted:rgba(240,240,245,0.45);
-      --card:rgba(255,255,255,0.04);--radius:16px;
-    }
+    :root{--bg:#0a0a0f;--bg2:#12121a;--bg3:#1a1a26;--border:rgba(255,255,255,0.08);--accent:#00ff88;--red:#ff4466;--text:#f0f0f5;--muted:rgba(240,240,245,0.45);--card:rgba(255,255,255,0.04);--radius:16px}
     *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
     html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;overflow-x:hidden}
     #splash{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:100;transition:opacity 0.5s}
@@ -45,59 +40,19 @@
     .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
     .btn-analyze{width:100%;padding:16px;background:var(--accent);color:#000;border:none;border-radius:12px;font-family:'Space Mono',monospace;font-size:14px;font-weight:700;letter-spacing:1px;cursor:pointer;transition:all 0.2s;margin-top:4px}
     .btn-analyze:active{transform:scale(0.97)}
-    .btn-analyze:disabled{opacity:0.4;cursor:not-allowed}
 
-    /* LOADING */
-    .loading{display:none;align-items:center;gap:12px;padding:16px}
-    .loading.show{display:flex}
-    .dots{display:flex;gap:5px}
-    .dots span{width:7px;height:7px;border-radius:50%;background:var(--accent);animation:dp 1.2s infinite}
-    .dots span:nth-child(2){animation-delay:.2s}.dots span:nth-child(3){animation-delay:.4s}
-    @keyframes dp{0%,80%,100%{opacity:.15;transform:scale(0.8)}40%{opacity:1;transform:scale(1)}}
-    .loading-txt{font-size:13px;color:var(--muted)}
-
-    /* RESULT */
-    #result{display:none}
-    #result.show{display:flex;flex-direction:column;gap:12px}
-    .rec-card{border-radius:var(--radius);padding:20px;position:relative;overflow:hidden}
-    .rec-call{background:linear-gradient(135deg,rgba(0,255,136,0.12),rgba(0,255,136,0.04));border:1px solid rgba(0,255,136,0.25)}
-    .rec-put{background:linear-gradient(135deg,rgba(255,68,102,0.12),rgba(255,68,102,0.04));border:1px solid rgba(255,68,102,0.25)}
-    .rec-neutral{background:linear-gradient(135deg,rgba(0,196,255,0.12),rgba(0,196,255,0.04));border:1px solid rgba(0,196,255,0.25)}
-    .rec-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
-    .rec-ticker{font-family:'Space Mono',monospace;font-size:22px;font-weight:700}
-    .rec-badge{font-family:'Space Mono',monospace;font-size:13px;font-weight:700;padding:5px 14px;border-radius:20px}
-    .badge-call{background:rgba(0,255,136,0.2);color:var(--accent);border:1px solid rgba(0,255,136,0.3)}
-    .badge-put{background:rgba(255,68,102,0.2);color:var(--red);border:1px solid rgba(255,68,102,0.3)}
-    .badge-neutral{background:rgba(0,196,255,0.2);color:#00c4ff;border:1px solid rgba(0,196,255,0.3)}
-    .rec-price{font-family:'Space Mono',monospace;font-size:28px;font-weight:700;margin-bottom:4px}
-    .rec-trend{font-size:12px;color:var(--muted)}
-    .conf-wrap{margin-top:14px}
-    .conf-label{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:6px}
-    .conf-track{height:4px;background:rgba(255,255,255,0.08);border-radius:2px;overflow:hidden}
-    .conf-fill{height:100%;border-radius:2px;transition:width 1s ease}
-    .option-box{background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:12px;padding:14px}
-    .option-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
-    .opt-item{display:flex;flex-direction:column;gap:3px}
-    .opt-key{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
-    .opt-val{font-family:'Space Mono',monospace;font-size:14px;font-weight:700}
-    .exit-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-    .exit-card{border-radius:12px;padding:14px;text-align:center}
-    .exit-tp{background:rgba(0,255,136,0.06);border:1px solid rgba(0,255,136,0.2)}
-    .exit-sl{background:rgba(255,68,102,0.06);border:1px solid rgba(255,68,102,0.2)}
-    .exit-label{font-size:10px;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
-    .exit-tp .exit-label{color:var(--accent)}
-    .exit-sl .exit-label{color:var(--red)}
-    .exit-price{font-family:'Space Mono',monospace;font-size:18px;font-weight:700}
-    .exit-pct{font-size:11px;color:var(--muted);margin-top:2px}
-    .risk-wrap{margin-top:4px}
-    .risk-label-row{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:6px}
-    .risk-track{height:6px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden}
-    .risk-fill{height:100%;border-radius:3px;transition:width 1s ease}
-    .analysis-txt{font-size:13px;color:rgba(240,240,245,0.75);line-height:1.7}
-    .cat-list{list-style:none;display:flex;flex-direction:column;gap:6px;margin-top:6px}
-    .cat-list li{font-size:13px;color:rgba(240,240,245,0.75);padding-left:16px;position:relative;line-height:1.5}
-    .cat-list li::before{content:'→';position:absolute;left:0;color:var(--accent);font-size:11px;top:2px}
-    .risk-list li::before{color:var(--red)}
+    /* RESULTADO CARD */
+    .result-card{background:rgba(0,255,136,0.04);border:1px solid rgba(0,255,136,0.2);border-radius:var(--radius);padding:20px;display:none}
+    .result-card.show{display:block}
+    .result-title{font-family:'Space Mono',monospace;font-size:12px;color:var(--accent);letter-spacing:1px;margin-bottom:14px}
+    .result-step{display:flex;gap:12px;margin-bottom:14px;align-items:flex-start}
+    .step-num{background:var(--accent);color:#000;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;font-family:'Space Mono',monospace}
+    .step-txt{font-size:14px;color:var(--text);line-height:1.6;padding-top:2px}
+    .step-txt strong{color:var(--accent)}
+    .btn-claude{width:100%;padding:16px;background:linear-gradient(135deg,#7c3aed,#4f46e5);color:#fff;border:none;border-radius:12px;font-family:'Space Mono',monospace;font-size:14px;font-weight:700;letter-spacing:1px;cursor:pointer;transition:all 0.2s;margin-top:8px;display:flex;align-items:center;justify-content:center;gap:8px}
+    .btn-claude:active{transform:scale(0.97)}
+    .btn-copy{width:100%;padding:12px;background:transparent;border:1px solid rgba(0,255,136,0.3);border-radius:10px;color:var(--accent);font-family:'Space Mono',monospace;font-size:12px;cursor:pointer;margin-top:8px;transition:all 0.2s}
+    .btn-copy:active{background:rgba(0,255,136,0.1)}
 
     /* HISTORY */
     #page-history{display:none}
@@ -113,6 +68,10 @@
     .tag-call{background:rgba(0,255,136,0.15);color:var(--accent)}
     .tag-put{background:rgba(255,68,102,0.15);color:var(--red)}
     .tag-info{background:rgba(255,255,255,0.05);color:var(--muted)}
+
+    /* SAVE FORM */
+    .save-section{margin-top:16px;border-top:1px solid var(--border);padding-top:14px}
+    .btn-save{width:100%;padding:12px;background:transparent;border:1px solid rgba(0,255,136,0.4);border-radius:10px;color:var(--accent);font-family:'Space Mono',monospace;font-size:12px;cursor:pointer;margin-top:8px;transition:all 0.2s}
 
     /* FOOTER */
     .app-footer{padding:24px 20px 32px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:16px}
@@ -146,7 +105,7 @@
       <div class="logo">OPTIONS_AI</div>
       <div class="hbadge">Weekly</div>
     </div>
-    <div class="header-sub">Opciones semanales con IA · Potenciado por Claude</div>
+    <div class="header-sub">Opciones semanales · Potenciado por Claude AI</div>
   </header>
 
   <div id="page-form">
@@ -185,15 +144,43 @@
             <input type="text" id="cap" placeholder="$500" />
           </div>
         </div>
-        <button class="btn-analyze" id="btnAnalyze" onclick="analyze()">ANALIZAR →</button>
+        <button class="btn-analyze" onclick="generate()">ANALIZAR →</button>
       </div>
 
-      <div class="loading" id="loading">
-        <div class="dots"><span></span><span></span><span></span></div>
-        <div class="loading-txt" id="loadingTxt">Analizando mercado...</div>
-      </div>
+      <!-- RESULTADO -->
+      <div class="result-card fade-in" id="resultCard">
+        <div class="result-title">✅ ANÁLISIS LISTO — 2 PASOS</div>
 
-      <div id="result"></div>
+        <div class="result-step">
+          <div class="step-num">1</div>
+          <div class="step-txt">Presiona el botón de abajo — se abre <strong>Claude AI</strong> con tu análisis listo para enviar</div>
+        </div>
+        <div class="result-step">
+          <div class="step-num">2</div>
+          <div class="step-txt">En Claude presiona <strong>Enter</strong> — recibes el análisis completo en segundos</div>
+        </div>
+
+        <button class="btn-claude" onclick="openClaude()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-5"/></svg>
+          ABRIR CLAUDE AI →
+        </button>
+        <button class="btn-copy" id="btnCopy" onclick="copyMsg()">📋 O COPIA EL MENSAJE MANUALMENTE</button>
+
+        <div class="save-section">
+          <div class="card-title" style="margin-bottom:10px">Guardar en historial después del análisis</div>
+          <div class="row2">
+            <div class="field">
+              <label>Recomendación</label>
+              <input type="text" id="h_rec" placeholder="CALL o PUT" style="text-transform:uppercase" />
+            </div>
+            <div class="field">
+              <label>Strike</label>
+              <input type="text" id="h_strike" placeholder="$295" />
+            </div>
+          </div>
+          <button class="btn-save" onclick="saveHistory()">💾 GUARDAR EN HISTORIAL</button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -239,8 +226,8 @@
 <script>
 setTimeout(() => document.getElementById('splash').classList.add('hide'), 1800);
 let history = JSON.parse(localStorage.getItem('optionsHistory') || '[]');
-const msgs = ['Analizando mercado...','Evaluando tendencias...','Calculando strikes...','Preparando recomendación...'];
-let msgIdx = 0, msgTimer;
+let currentMsg = '';
+let currentTicker = '';
 
 function showPage(page) {
   document.getElementById('page-form').classList.toggle('hidden', page !== 'form');
@@ -250,7 +237,7 @@ function showPage(page) {
   if (page === 'history') renderHistory();
 }
 
-async function analyze() {
+function generate() {
   const tk = document.getElementById('tk').value.trim().toUpperCase();
   const rk = document.getElementById('rk').value;
   const ct = document.getElementById('ct').value || '2';
@@ -258,111 +245,89 @@ async function analyze() {
   const cap = document.getElementById('cap').value || 'no especificado';
   if (!tk) { document.getElementById('tk').focus(); return; }
 
-  const btn = document.getElementById('btnAnalyze');
-  const loading = document.getElementById('loading');
-  const result = document.getElementById('result');
-  const loadingTxt = document.getElementById('loadingTxt');
+  currentTicker = tk;
+  const today = new Date();
+  const exp = new Date(today);
+  exp.setDate(today.getDate() + 7);
+  const expStr = exp.toLocaleDateString('es-MX', {day:'numeric', month:'short', year:'numeric'});
 
-  btn.disabled = true;
-  loading.classList.add('show');
-  result.className = '';
-  result.innerHTML = '';
-  msgIdx = 0;
-  msgTimer = setInterval(() => { loadingTxt.textContent = msgs[msgIdx++ % msgs.length]; }, 2000);
+  currentMsg = `Analiza la acción ${tk} y dame una recomendación de opción semanal (expiración máxima ${expStr}). Tipo: ${tipo}. Perfil de riesgo: ${rk}. Capital: ${cap}. Contratos: ${ct}. Incluye: 1) tendencia y sentimiento del mercado, 2) recomendación clara de CALL o PUT con justificación, 3) strike exacto sugerido, 4) fecha de expiración específica, 5) prima estimada y costo total para ${ct} contratos, 6) análisis técnico (RSI, soporte y resistencia), 7) catalizadores importantes de la semana, 8) nivel de riesgo del 1 al 10, 9) take profit +50% y stop loss -50%, 10) paso a paso para ejecutar en thinkorswim paperMoney.`;
 
-  try {
-    const res = await fetch('/api/analyze', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ticker: tk, riesgo: rk, contratos: ct, tipo, capital: cap })
-    });
-    const d = await res.json();
-    if (d.error) throw new Error(d.error);
+  document.getElementById('resultCard').classList.add('show');
+  document.getElementById('resultCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
 
-    clearInterval(msgTimer);
-    loading.classList.remove('show');
+function openClaude() {
+  const encoded = encodeURIComponent(currentMsg);
+  const url = `https://claude.ai/new?q=${encoded}`;
+  window.open(url, '_blank');
+}
 
-    const rc = d.recomendacion === 'CALL' ? 'call' : d.recomendacion === 'PUT' ? 'put' : 'neutral';
-    const color = rc === 'call' ? 'var(--accent)' : rc === 'put' ? 'var(--red)' : '#00c4ff';
-    const riskColor = d.nivel_riesgo <= 3 ? 'var(--accent)' : d.nivel_riesgo <= 6 ? '#ffaa00' : 'var(--red)';
-    const cats = (d.catalistas||[]).map(c=>`<li>${c}</li>`).join('');
-    const risks = (d.riesgos||[]).map(r=>`<li>${r}</li>`).join('');
-    const tendArrow = d.tendencia==='Alcista'?'↑':d.tendencia==='Bajista'?'↓':'→';
+function copyMsg() {
+  navigator.clipboard.writeText(currentMsg).then(() => {
+    const btn = document.getElementById('btnCopy');
+    btn.textContent = '✅ COPIADO';
+    setTimeout(() => btn.textContent = '📋 O COPIA EL MENSAJE MANUALMENTE', 2000);
+  }).catch(() => {
+    const ta = document.createElement('textarea');
+    ta.value = currentMsg;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    const btn = document.getElementById('btnCopy');
+    btn.textContent = '✅ COPIADO';
+    setTimeout(() => btn.textContent = '📋 O COPIA EL MENSAJE MANUALMENTE', 2000);
+  });
+}
 
-    result.className = 'show';
-    result.innerHTML = `
-      <div class="rec-card rec-${rc} fade-in">
-        <div class="rec-top">
-          <div class="rec-ticker">${d.ticker}</div>
-          <div class="rec-badge badge-${rc}">${d.recomendacion}</div>
-        </div>
-        <div class="rec-price">${d.precio_actual}</div>
-        <div class="rec-trend">${tendArrow} ${d.tendencia} · ${d.sentimiento}</div>
-        <div class="conf-wrap">
-          <div class="conf-label"><span>Confianza</span><span style="color:${color}">${d.confianza}%</span></div>
-          <div class="conf-track"><div class="conf-fill" style="width:${d.confianza}%;background:${color}"></div></div>
-        </div>
-      </div>
-      <div class="card fade-in">
-        <div class="card-title" style="color:${color}">Opción recomendada</div>
-        <div class="option-box">
-          <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Strike · Expiración</div>
-          <div style="font-family:'Space Mono',monospace;font-size:18px;font-weight:700;margin-bottom:10px">${d.strike} · ${d.expiracion}</div>
-          <div class="option-grid">
-            <div class="opt-item"><span class="opt-key">Prima/contrato</span><span class="opt-val">${d.prima}</span></div>
-            <div class="opt-item"><span class="opt-key">Costo total</span><span class="opt-val">${d.costo_total}</span></div>
-            <div class="opt-item"><span class="opt-key">Contratos</span><span class="opt-val">${ct}</span></div>
-            <div class="opt-item"><span class="opt-key">Perfil</span><span class="opt-val" style="text-transform:capitalize">${rk}</span></div>
-          </div>
-        </div>
-        <div class="risk-wrap" style="margin-top:14px">
-          <div class="risk-label-row"><span>Nivel de riesgo</span><span style="color:${riskColor}">${d.nivel_riesgo}/10</span></div>
-          <div class="risk-track"><div class="risk-fill" style="width:${d.nivel_riesgo*10}%;background:${riskColor}"></div></div>
-        </div>
-      </div>
-      <div class="card fade-in">
-        <div class="card-title">Objetivos de salida</div>
-        <div class="exit-grid">
-          <div class="exit-card exit-tp"><div class="exit-label">Take Profit +50%</div><div class="exit-price" style="color:var(--accent)">${d.take_profit}</div><div class="exit-pct">Vende aquí ✓</div></div>
-          <div class="exit-card exit-sl"><div class="exit-label">Stop Loss -50%</div><div class="exit-price" style="color:var(--red)">${d.stop_loss}</div><div class="exit-pct">Cierra aquí ✗</div></div>
-        </div>
-      </div>
-      <div class="card fade-in"><div class="card-title">Justificación</div><div class="analysis-txt">${d.justificacion}</div></div>
-      <div class="card fade-in"><div class="card-title">Análisis técnico</div><div class="analysis-txt">${d.analisis_tecnico}</div></div>
-      <div class="card fade-in"><div class="card-title">Análisis fundamental</div><div class="analysis-txt">${d.analisis_fundamental}</div></div>
-      <div class="card fade-in"><div class="card-title" style="color:var(--accent)">Catalizadores</div><ul class="cat-list">${cats}</ul></div>
-      <div class="card fade-in"><div class="card-title" style="color:var(--red)">Riesgos</div><ul class="cat-list risk-list">${risks}</ul></div>`;
+function saveHistory() {
+  const rec = document.getElementById('h_rec').value.trim().toUpperCase();
+  const strike = document.getElementById('h_strike').value.trim();
+  if (!rec) { alert('Escribe CALL o PUT para guardar'); return; }
 
-    history.push({ ticker: d.ticker, rec: d.recomendacion, strike: d.strike, prima: d.prima, riesgo: rk, contratos: ct, date: new Date().toLocaleDateString('es-MX') });
-    if (history.length > 30) history.shift();
-    localStorage.setItem('optionsHistory', JSON.stringify(history));
+  history.push({
+    ticker: currentTicker,
+    rec, strike,
+    riesgo: document.getElementById('rk').value,
+    contratos: document.getElementById('ct').value,
+    date: new Date().toLocaleDateString('es-MX')
+  });
+  if (history.length > 30) history.shift();
+  localStorage.setItem('optionsHistory', JSON.stringify(history));
 
-  } catch(e) {
-    clearInterval(msgTimer);
-    loading.classList.remove('show');
-    result.className = 'show';
-    result.innerHTML = `<div class="card fade-in"><div style="color:var(--red);font-size:14px">Error: ${e.message}</div></div>`;
-  }
-  btn.disabled = false;
+  document.getElementById('h_rec').value = '';
+  document.getElementById('h_strike').value = '';
+  document.getElementById('resultCard').classList.remove('show');
+
+  const btn = event.target;
+  btn.textContent = '✅ GUARDADO';
+  setTimeout(() => btn.textContent = '💾 GUARDAR EN HISTORIAL', 2000);
 }
 
 function renderHistory() {
   const el = document.getElementById('historyContent');
-  if (!history.length) { el.innerHTML = '<div class="history-empty">Sin análisis guardados aún.</div>'; return; }
+  if (!history.length) {
+    el.innerHTML = '<div class="history-empty">Sin análisis guardados aún.<br>Genera tu primer análisis para verlo aquí.</div>';
+    return;
+  }
   el.innerHTML = history.slice().reverse().map(h => `
     <div class="hist-item">
-      <div class="hist-top"><div class="hist-ticker">${h.ticker}</div><div class="hist-date">${h.date}</div></div>
+      <div class="hist-top">
+        <div class="hist-ticker">${h.ticker}</div>
+        <div class="hist-date">${h.date}</div>
+      </div>
       <div class="hist-tags">
         <span class="hist-tag ${h.rec==='CALL'?'tag-call':'tag-put'}">${h.rec}</span>
-        ${h.strike?`<span class="hist-tag tag-info">Strike: ${h.strike}</span>`:''}
-        ${h.prima?`<span class="hist-tag tag-info">Prima: ${h.prima}</span>`:''}
+        ${h.strike ? `<span class="hist-tag tag-info">Strike: ${h.strike}</span>` : ''}
         <span class="hist-tag tag-info">${h.contratos} contratos</span>
+        <span class="hist-tag tag-info">${h.riesgo}</span>
       </div>
     </div>`).join('');
 }
 
 document.getElementById('tk').addEventListener('input', e => { e.target.value = e.target.value.toUpperCase(); });
-document.getElementById('tk').addEventListener('keydown', e => { if(e.key==='Enter') analyze(); });
+document.getElementById('tk').addEventListener('keydown', e => { if(e.key==='Enter') generate(); });
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
 </body>
