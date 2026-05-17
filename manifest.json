@@ -1,27 +1,16 @@
 {
-  "name": "OptionsAI — Analizador de Opciones",
-  "short_name": "OptionsAI",
-  "description": "Analizador de opciones semanales con inteligencia artificial",
+  "name": "StrykePro — Opciones Semanales",
+  "short_name": "StrykePro",
+  "description": "Analizador de opciones semanales potenciado por Claude AI",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0a0a0f",
-  "theme_color": "#0a0a0f",
+  "background_color": "#0b0c10",
+  "theme_color": "#0b0c10",
   "orientation": "portrait",
   "lang": "es",
   "icons": [
-    {
-      "src": "icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
-    }
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
   ],
-  "categories": ["finance", "utilities"],
-  "screenshots": []
+  "categories": ["finance", "utilities"]
 }

@@ -1,124 +1,318 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <meta name="theme-color" content="#0a0a0f" />
+  <meta name="theme-color" content="#0b0c10" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="OptionsAI" />
+  <meta name="apple-mobile-web-app-title" content="StrykePro" />
   <link rel="manifest" href="manifest.json" />
   <link rel="apple-touch-icon" href="icon-192.png" />
-  <title>OptionsAI</title>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <title>StrykePro — Opciones Semanales</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <style>
-    :root{--bg:#0a0a0f;--bg2:#12121a;--bg3:#1a1a26;--border:rgba(255,255,255,0.08);--accent:#00ff88;--red:#ff4466;--text:#f0f0f5;--muted:rgba(240,240,245,0.45);--card:rgba(255,255,255,0.04);--radius:16px}
-    *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-    html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;overflow-x:hidden}
-    #splash{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:100;transition:opacity 0.5s}
-    #splash.hide{opacity:0;pointer-events:none}
-    .splash-logo{font-family:'Space Mono',monospace;font-size:32px;color:var(--accent);letter-spacing:-1px;margin-bottom:8px}
-    .splash-sub{font-size:13px;color:var(--muted);letter-spacing:2px;text-transform:uppercase}
-    .splash-bar{width:120px;height:2px;background:var(--bg3);border-radius:2px;margin-top:32px;overflow:hidden}
-    .splash-fill{height:100%;background:var(--accent);animation:fillbar 1.5s ease forwards}
-    @keyframes fillbar{from{width:0}to{width:100%}}
-    #app{min-height:100dvh;display:flex;flex-direction:column}
-    header{padding:52px 20px 16px;background:linear-gradient(180deg,rgba(0,255,136,0.06) 0%,transparent 100%);border-bottom:1px solid var(--border)}
-    .header-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
-    .logo{font-family:'Space Mono',monospace;font-size:18px;color:var(--accent)}
-    .hbadge{font-size:10px;background:rgba(0,255,136,0.12);color:var(--accent);padding:3px 8px;border-radius:20px;border:1px solid rgba(0,255,136,0.2);letter-spacing:1px;text-transform:uppercase}
-    .header-sub{font-size:12px;color:var(--muted)}
-    .content{flex:1;padding:20px;display:flex;flex-direction:column;gap:16px}
-    .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px}
-    .card-title{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:14px;font-family:'Space Mono',monospace}
-    .field{margin-bottom:12px}
-    .field label{font-size:11px;color:var(--muted);display:block;margin-bottom:6px;text-transform:uppercase;letter-spacing:1px}
-    input,select{width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;padding:12px 14px;outline:none;transition:border-color 0.2s;appearance:none;-webkit-appearance:none}
-    input:focus,select:focus{border-color:rgba(0,255,136,0.4)}
-    input::placeholder{color:var(--muted)}
-    .ticker-input{font-family:'Space Mono',monospace;font-size:18px;text-transform:uppercase;letter-spacing:2px}
-    .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-    .btn-analyze{width:100%;padding:16px;background:var(--accent);color:#000;border:none;border-radius:12px;font-family:'Space Mono',monospace;font-size:14px;font-weight:700;letter-spacing:1px;cursor:pointer;transition:all 0.2s;margin-top:4px}
-    .btn-analyze:active{transform:scale(0.97)}
+    /* ── THEME TOKENS ── */
+    :root {
+      --bg:       #0b0c10;
+      --bg2:      #14151c;
+      --bg3:      #1d1e28;
+      --surface:  rgba(255,255,255,0.045);
+      --border:   rgba(255,255,255,0.09);
+      --text:     #eeeef2;
+      --muted:    rgba(238,238,242,0.42);
+      --accent:   #c6f135;
+      --accent2:  #38e8c6;
+      --red:      #ff5a6e;
+      --radius:   18px;
+      --shadow:   0 2px 24px rgba(0,0,0,0.45);
+    }
+    [data-theme="light"] {
+      --bg:       #f4f4f0;
+      --bg2:      #ffffff;
+      --bg3:      #eaeae6;
+      --surface:  rgba(0,0,0,0.04);
+      --border:   rgba(0,0,0,0.10);
+      --text:     #18181b;
+      --muted:    rgba(24,24,27,0.45);
+      --accent:   #5a8a00;
+      --accent2:  #009e88;
+      --red:      #d63347;
+      --shadow:   0 2px 24px rgba(0,0,0,0.10);
+    }
 
-    /* RESULTADO CARD */
-    .result-card{background:rgba(0,255,136,0.04);border:1px solid rgba(0,255,136,0.2);border-radius:var(--radius);padding:20px;display:none}
-    .result-card.show{display:block}
-    .result-title{font-family:'Space Mono',monospace;font-size:12px;color:var(--accent);letter-spacing:1px;margin-bottom:14px}
-    .result-step{display:flex;gap:12px;margin-bottom:14px;align-items:flex-start}
-    .step-num{background:var(--accent);color:#000;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;font-family:'Space Mono',monospace}
-    .step-txt{font-size:14px;color:var(--text);line-height:1.6;padding-top:2px}
-    .step-txt strong{color:var(--accent)}
-    .btn-claude{width:100%;padding:16px;background:linear-gradient(135deg,#7c3aed,#4f46e5);color:#fff;border:none;border-radius:12px;font-family:'Space Mono',monospace;font-size:14px;font-weight:700;letter-spacing:1px;cursor:pointer;transition:all 0.2s;margin-top:8px;display:flex;align-items:center;justify-content:center;gap:8px}
-    .btn-claude:active{transform:scale(0.97)}
-    .btn-copy{width:100%;padding:12px;background:transparent;border:1px solid rgba(0,255,136,0.3);border-radius:10px;color:var(--accent);font-family:'Space Mono',monospace;font-size:12px;cursor:pointer;margin-top:8px;transition:all 0.2s}
-    .btn-copy:active{background:rgba(0,255,136,0.1)}
+    /* ── RESET ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    html, body { height: 100%; background: var(--bg); color: var(--text); font-family: 'Outfit', sans-serif; overflow-x: hidden; transition: background 0.3s, color 0.3s; }
 
-    /* HISTORY */
-    #page-history{display:none}
-    #page-history.active{display:block}
-    #page-form.hidden{display:none}
-    .history-empty{text-align:center;padding:40px 20px;color:var(--muted);font-size:13px}
-    .hist-item{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px}
-    .hist-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
-    .hist-ticker{font-family:'Space Mono',monospace;font-size:16px;font-weight:700}
-    .hist-date{font-size:11px;color:var(--muted)}
-    .hist-tags{display:flex;gap:6px;flex-wrap:wrap}
-    .hist-tag{font-size:11px;padding:3px 10px;border-radius:20px;font-family:'Space Mono',monospace}
-    .tag-call{background:rgba(0,255,136,0.15);color:var(--accent)}
-    .tag-put{background:rgba(255,68,102,0.15);color:var(--red)}
-    .tag-info{background:rgba(255,255,255,0.05);color:var(--muted)}
+    /* ── SPLASH ── */
+    #splash {
+      position: fixed; inset: 0; background: var(--bg);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      z-index: 200; transition: opacity 0.6s ease;
+    }
+    #splash.hide { opacity: 0; pointer-events: none; }
+    .sp-logo { font-family: 'Syne', sans-serif; font-size: 36px; font-weight: 800; color: var(--accent); letter-spacing: -1.5px; }
+    .sp-sub { font-size: 12px; color: var(--muted); letter-spacing: 3px; text-transform: uppercase; margin-top: 6px; }
+    .sp-ring { width: 48px; height: 48px; border-radius: 50%; border: 2px solid var(--border); border-top-color: var(--accent); animation: spin 1s linear infinite; margin-top: 36px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* SAVE FORM */
-    .save-section{margin-top:16px;border-top:1px solid var(--border);padding-top:14px}
-    .btn-save{width:100%;padding:12px;background:transparent;border:1px solid rgba(0,255,136,0.4);border-radius:10px;color:var(--accent);font-family:'Space Mono',monospace;font-size:12px;cursor:pointer;margin-top:8px;transition:all 0.2s}
+    /* ── APP SHELL ── */
+    #app { min-height: 100dvh; display: flex; flex-direction: column; }
 
-    /* FOOTER */
-    .app-footer{padding:24px 20px 32px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:16px}
-    .legal-box{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:14px 16px}
-    .legal-title{font-family:'Space Mono',monospace;font-size:10px;color:rgba(240,240,245,0.3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px}
-    .legal-text{font-size:11px;color:rgba(240,240,245,0.35);line-height:1.7}
-    .designer-line{display:flex;align-items:center;justify-content:center;gap:6px;font-size:11px;color:rgba(240,240,245,0.25);font-family:'Space Mono',monospace}
-    .designer-name{color:rgba(0,255,136,0.5);font-weight:700}
-    .designer-dot{width:3px;height:3px;border-radius:50%;background:rgba(255,255,255,0.15)}
+    /* ── HEADER ── */
+    header {
+      padding: 54px 20px 18px;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .logo-wrap { display: flex; flex-direction: column; gap: 3px; }
+    .logo { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 800; color: var(--accent); letter-spacing: -0.5px; }
+    .logo-sub { font-size: 11px; color: var(--muted); letter-spacing: 1.5px; text-transform: uppercase; }
 
-    .bottom-nav{position:sticky;bottom:0;background:rgba(10,10,15,0.97);backdrop-filter:blur(20px);border-top:1px solid var(--border);display:flex;padding:8px 20px;padding-bottom:max(8px,env(safe-area-inset-bottom));gap:4px}
-    .nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px;border-radius:10px;border:none;background:transparent;color:var(--muted);font-size:10px;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all 0.2s}
-    .nav-btn.active{color:var(--accent);background:rgba(0,255,136,0.08)}
-    .nav-btn svg{width:20px;height:20px}
-    .fade-in{animation:fadeIn 0.4s ease forwards}
-    @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-    ::-webkit-scrollbar{width:0}
+    .header-right { display: flex; align-items: center; gap: 10px; }
+    .theme-btn {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: var(--surface); border: 1px solid var(--border);
+      color: var(--muted); font-size: 16px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s;
+    }
+    .theme-btn:active { transform: scale(0.92); }
+    .badge-weekly {
+      font-size: 10px; background: rgba(198,241,53,0.12); color: var(--accent);
+      padding: 4px 10px; border-radius: 20px; border: 1px solid rgba(198,241,53,0.22);
+      letter-spacing: 1px; text-transform: uppercase; font-family: 'DM Mono', monospace;
+    }
+
+    /* ── CONTENT ── */
+    .content { flex: 1; padding: 20px; display: flex; flex-direction: column; gap: 14px; }
+
+    /* ── CARDS ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px;
+    }
+    .card-label {
+      font-family: 'DM Mono', monospace; font-size: 10px;
+      color: var(--muted); text-transform: uppercase; letter-spacing: 2px;
+      margin-bottom: 14px;
+    }
+
+    /* ── FORM ── */
+    .field { margin-bottom: 12px; }
+    .field:last-child { margin-bottom: 0; }
+    .field label { font-size: 11px; color: var(--muted); display: block; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 1px; }
+
+    input, select {
+      width: 100%; background: var(--bg2);
+      border: 1px solid var(--border); border-radius: 11px;
+      color: var(--text); font-family: 'Outfit', sans-serif; font-size: 15px;
+      padding: 12px 14px; outline: none;
+      transition: border-color 0.2s, background 0.3s;
+      appearance: none; -webkit-appearance: none;
+    }
+    input:focus, select:focus { border-color: rgba(198,241,53,0.45); }
+    input::placeholder { color: var(--muted); }
+    .ticker-input {
+      font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 3px; text-align: center;
+    }
+    .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+    /* ── BUTTON ── */
+    .btn-main {
+      width: 100%; padding: 16px;
+      background: var(--accent); color: #0b0c10;
+      border: none; border-radius: 13px;
+      font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700;
+      letter-spacing: 0.5px; cursor: pointer; transition: all 0.2s;
+      margin-top: 6px;
+    }
+    .btn-main:active { transform: scale(0.97); opacity: 0.88; }
+    .btn-main:disabled { opacity: 0.35; cursor: not-allowed; }
+
+    /* ── CHART CARD ── */
+    .chart-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 16px; display: none;
+    }
+    .chart-card.show { display: block; }
+    .chart-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+    .chart-ticker { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 700; }
+    .chart-price { font-family: 'DM Mono', monospace; font-size: 16px; }
+    .chart-change { font-size: 12px; margin-top: 2px; }
+    .chart-wrap { position: relative; height: 160px; }
+
+    /* ── RESULT CARD ── */
+    .result-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 20px; display: none;
+    }
+    .result-card.show { display: block; }
+
+    .res-title {
+      font-family: 'DM Mono', monospace; font-size: 10px;
+      color: var(--accent); letter-spacing: 2px; text-transform: uppercase;
+      margin-bottom: 18px; display: flex; align-items: center; gap: 8px;
+    }
+    .res-title::before {
+      content: ''; width: 6px; height: 6px; border-radius: 50%;
+      background: var(--accent); display: inline-block;
+    }
+
+    .step-row { display: flex; gap: 12px; margin-bottom: 16px; align-items: flex-start; }
+    .step-num {
+      background: var(--accent); color: #0b0c10;
+      min-width: 26px; height: 26px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Syne', sans-serif; font-size: 12px; font-weight: 700;
+      flex-shrink: 0;
+    }
+    .step-txt { font-size: 14px; color: var(--text); line-height: 1.6; padding-top: 3px; }
+    .step-txt strong { color: var(--accent); font-weight: 600; }
+
+    .btn-claude {
+      width: 100%; padding: 16px;
+      background: linear-gradient(135deg, #7c3aed, #4338ca);
+      color: #fff; border: none; border-radius: 13px;
+      font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700;
+      cursor: pointer; transition: all 0.2s; margin-top: 6px;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .btn-claude:active { transform: scale(0.97); }
+
+    .btn-copy {
+      width: 100%; padding: 12px;
+      background: transparent; border: 1px solid var(--border);
+      border-radius: 11px; color: var(--muted);
+      font-family: 'DM Mono', monospace; font-size: 11px;
+      cursor: pointer; margin-top: 8px; transition: all 0.2s;
+    }
+    .btn-copy:active { background: var(--surface); }
+
+    /* ── DIVIDER ── */
+    .divider { border: none; border-top: 1px solid var(--border); margin: 16px 0; }
+
+    /* ── SAVE SECTION ── */
+    .save-label {
+      font-family: 'DM Mono', monospace; font-size: 10px;
+      color: var(--muted); text-transform: uppercase; letter-spacing: 2px;
+      margin-bottom: 12px;
+    }
+    .btn-save {
+      width: 100%; padding: 12px;
+      background: transparent; border: 1px solid rgba(198,241,53,0.3);
+      border-radius: 11px; color: var(--accent);
+      font-family: 'DM Mono', monospace; font-size: 11px;
+      cursor: pointer; margin-top: 8px; transition: all 0.2s;
+    }
+    .btn-save:active { background: rgba(198,241,53,0.07); }
+
+    /* ── HISTORY PAGE ── */
+    #page-history { display: none; }
+    #page-history.active { display: block; }
+    #page-form.hidden { display: none; }
+
+    .hist-empty { text-align: center; padding: 48px 20px; color: var(--muted); font-size: 13px; }
+    .hist-item {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 13px; padding: 14px; margin-bottom: 10px;
+    }
+    .hist-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+    .hist-ticker { font-family: 'Syne', sans-serif; font-size: 17px; font-weight: 700; }
+    .hist-date { font-size: 11px; color: var(--muted); }
+    .hist-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+    .tag {
+      font-size: 11px; padding: 3px 10px; border-radius: 20px;
+      font-family: 'DM Mono', monospace;
+    }
+    .tag-call { background: rgba(198,241,53,0.13); color: var(--accent); }
+    .tag-put { background: rgba(255,90,110,0.13); color: var(--red); }
+    .tag-info { background: var(--surface); color: var(--muted); border: 1px solid var(--border); }
+
+    /* ── FOOTER ── */
+    .app-footer { padding: 24px 20px 28px; border-top: 1px solid var(--border); }
+    .legal-box {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 13px; padding: 14px 16px; margin-bottom: 16px;
+    }
+    .legal-title {
+      font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px;
+    }
+    .legal-text { font-size: 11px; color: var(--muted); line-height: 1.7; }
+    .credit {
+      text-align: center; font-family: 'DM Mono', monospace;
+      font-size: 11px; color: var(--muted);
+    }
+    .credit strong { color: var(--accent); }
+
+    /* ── NAV ── */
+    .bottom-nav {
+      position: sticky; bottom: 0;
+      background: var(--bg); border-top: 1px solid var(--border);
+      display: flex; padding: 8px 20px;
+      padding-bottom: max(8px, env(safe-area-inset-bottom)); gap: 4px;
+    }
+    .nav-btn {
+      flex: 1; display: flex; flex-direction: column; align-items: center;
+      gap: 4px; padding: 8px; border-radius: 11px; border: none;
+      background: transparent; color: var(--muted);
+      font-size: 10px; font-family: 'Outfit', sans-serif;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .nav-btn.active { color: var(--accent); background: rgba(198,241,53,0.08); }
+    .nav-btn svg { width: 20px; height: 20px; }
+
+    /* ── ANIMATION ── */
+    .fade-up { animation: fadeUp 0.4s ease forwards; }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+    ::-webkit-scrollbar { width: 0; }
   </style>
 </head>
 <body>
 
+<!-- SPLASH -->
 <div id="splash">
-  <div class="splash-logo">OPTIONS_AI</div>
-  <div class="splash-sub">Analizador Semanal</div>
-  <div class="splash-bar"><div class="splash-fill"></div></div>
+  <div class="sp-logo">STRYKE<span style="color:var(--muted);font-weight:400">PRO</span></div>
+  <div class="sp-sub">Opciones Semanales</div>
+  <div class="sp-ring"></div>
 </div>
 
+<!-- APP -->
 <div id="app">
   <header>
-    <div class="header-top">
-      <div class="logo">OPTIONS_AI</div>
-      <div class="hbadge">Weekly</div>
+    <div class="logo-wrap">
+      <div class="logo">STRYKEPRO</div>
+      <div class="logo-sub">Weekly Options</div>
     </div>
-    <div class="header-sub">Opciones semanales · Potenciado por Claude AI</div>
+    <div class="header-right">
+      <button class="theme-btn" id="themeBtn" onclick="toggleTheme()" title="Cambiar tema">🌙</button>
+      <div class="badge-weekly">Weekly</div>
+    </div>
   </header>
 
+  <!-- FORM PAGE -->
   <div id="page-form">
     <div class="content">
-      <div class="card fade-in">
-        <div class="card-title">Nueva Análisis</div>
+
+      <!-- INPUT CARD -->
+      <div class="card fade-up">
+        <div class="card-label">Nueva Análisis</div>
+
         <div class="field">
           <label>Ticker</label>
-          <input class="ticker-input" id="tk" type="text" placeholder="AAPL" maxlength="6" autocomplete="off" autocorrect="off" spellcheck="false" />
+          <input class="ticker-input" id="tk" type="text" placeholder="AAPL" maxlength="6"
+            autocomplete="off" autocorrect="off" spellcheck="false" />
         </div>
+
         <div class="row2">
           <div class="field">
-            <label>Riesgo</label>
+            <label>Perfil de Riesgo</label>
             <select id="rk">
               <option value="conservador">Conservador</option>
               <option value="moderado" selected>Moderado</option>
@@ -130,6 +324,7 @@
             <input type="number" id="ct" value="2" min="1" max="100" />
           </div>
         </div>
+
         <div class="row2">
           <div class="field">
             <label>Tipo</label>
@@ -144,91 +339,133 @@
             <input type="text" id="cap" placeholder="$500" />
           </div>
         </div>
-        <button class="btn-analyze" onclick="generate()">ANALIZAR →</button>
+
+        <button class="btn-main" onclick="generate()">ANALIZAR →</button>
       </div>
 
-      <!-- RESULTADO -->
-      <div class="result-card fade-in" id="resultCard">
-        <div class="result-title">✅ ANÁLISIS LISTO — 2 PASOS</div>
-
-        <div class="result-step">
-          <div class="step-num">1</div>
-          <div class="step-txt">Presiona el botón de abajo — se abre <strong>Claude AI</strong> con tu análisis listo para enviar</div>
+      <!-- CHART CARD -->
+      <div class="chart-card fade-up" id="chartCard">
+        <div class="chart-header">
+          <div>
+            <div class="chart-ticker" id="chartTicker">—</div>
+            <div class="chart-change" id="chartChange"></div>
+          </div>
+          <div class="chart-price" id="chartPrice">—</div>
         </div>
-        <div class="result-step">
+        <div class="chart-wrap">
+          <canvas id="priceChart"></canvas>
+        </div>
+      </div>
+
+      <!-- RESULT CARD -->
+      <div class="result-card fade-up" id="resultCard">
+        <div class="res-title">Análisis Listo — 2 Pasos</div>
+
+        <div class="step-row">
+          <div class="step-num">1</div>
+          <div class="step-txt">Toca el botón de abajo — se abre <strong>Claude AI</strong> con tu análisis listo para enviar</div>
+        </div>
+        <div class="step-row">
           <div class="step-num">2</div>
           <div class="step-txt">En Claude presiona <strong>Enter</strong> — recibes el análisis completo en segundos</div>
         </div>
 
         <button class="btn-claude" onclick="openClaude()">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-5"/></svg>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-5"/>
+          </svg>
           ABRIR CLAUDE AI →
         </button>
-        <button class="btn-copy" id="btnCopy" onclick="copyMsg()">📋 O COPIA EL MENSAJE MANUALMENTE</button>
+        <button class="btn-copy" id="btnCopy" onclick="copyMsg()">📋 COPIAR MENSAJE MANUALMENTE</button>
 
-        <div class="save-section">
-          <div class="card-title" style="margin-bottom:10px">Guardar en historial después del análisis</div>
-          <div class="row2">
-            <div class="field">
-              <label>Recomendación</label>
-              <input type="text" id="h_rec" placeholder="CALL o PUT" style="text-transform:uppercase" />
-            </div>
-            <div class="field">
-              <label>Strike</label>
-              <input type="text" id="h_strike" placeholder="$295" />
-            </div>
+        <hr class="divider" />
+
+        <div class="save-label">Guardar en historial</div>
+        <div class="row2">
+          <div class="field">
+            <label>Recomendación</label>
+            <input type="text" id="h_rec" placeholder="CALL o PUT" style="text-transform:uppercase" />
           </div>
-          <button class="btn-save" onclick="saveHistory()">💾 GUARDAR EN HISTORIAL</button>
+          <div class="field">
+            <label>Strike</label>
+            <input type="text" id="h_strike" placeholder="$295" />
+          </div>
         </div>
+        <button class="btn-save" onclick="saveHistory()">💾 GUARDAR EN HISTORIAL</button>
       </div>
+
     </div>
   </div>
 
+  <!-- HISTORY PAGE -->
   <div id="page-history">
     <div class="content">
-      <div class="card fade-in">
-        <div class="card-title">Historial de análisis</div>
+      <div class="card fade-up">
+        <div class="card-label">Historial de Análisis</div>
         <div id="historyContent"></div>
       </div>
     </div>
   </div>
 
+  <!-- FOOTER -->
   <footer class="app-footer">
     <div class="legal-box">
-      <div class="legal-title">⚠ Aviso Legal Importante</div>
+      <div class="legal-title">⚠ Aviso Legal</div>
       <div class="legal-text">
-        La información generada por esta aplicación tiene carácter exclusivamente educativo e informativo. Los análisis, recomendaciones y proyecciones presentados <strong style="color:rgba(240,240,245,0.5)">no constituyen asesoramiento financiero, de inversión, legal ni fiscal</strong> de ninguna naturaleza.<br><br>
-        Invertir en opciones financieras conlleva un riesgo significativo de pérdida total del capital invertido. Los mercados de valores son impredecibles y los resultados pasados no garantizan rendimientos futuros. Antes de tomar cualquier decisión de inversión, consulte con un asesor financiero certificado y regulado.<br><br>
-        El uso de esta herramienta implica la aceptación plena de estos términos. El desarrollador no asume responsabilidad alguna por decisiones tomadas con base en el contenido aquí presentado.
+        La información generada tiene carácter exclusivamente educativo e informativo.
+        Los análisis no constituyen asesoramiento financiero, de inversión, legal ni fiscal.
+        Invertir en opciones conlleva riesgo significativo de pérdida total del capital.
+        Consulte con un asesor certificado antes de operar.
       </div>
     </div>
-    <div class="designer-line">
-      <span>Diseñado por</span>
-      <div class="designer-dot"></div>
-      <span class="designer-name">Edward Labrador</span>
-      <div class="designer-dot"></div>
-      <span>© 2026</span>
-    </div>
+    <div class="credit">Diseñado por <strong>Edward Labrador</strong> · © 2026</div>
   </footer>
 
+  <!-- NAV -->
   <nav class="bottom-nav">
     <button class="nav-btn active" id="nav-home" onclick="showPage('form')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+        <polyline points="9,22 9,12 15,12 15,22"/>
+      </svg>
       Analizar
     </button>
     <button class="nav-btn" id="nav-hist" onclick="showPage('history')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/>
+      </svg>
       Historial
     </button>
   </nav>
 </div>
 
 <script>
-setTimeout(() => document.getElementById('splash').classList.add('hide'), 1800);
-let history = JSON.parse(localStorage.getItem('optionsHistory') || '[]');
+// ── THEME ──
+const html = document.documentElement;
+const savedTheme = localStorage.getItem('sp_theme') || 'dark';
+html.setAttribute('data-theme', savedTheme);
+const themeBtn = document.getElementById('themeBtn');
+themeBtn.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+
+function toggleTheme() {
+  const current = html.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+  localStorage.setItem('sp_theme', next);
+  themeBtn.textContent = next === 'dark' ? '☀️' : '🌙';
+  if (chartInstance) updateChartTheme();
+}
+
+// ── SPLASH ──
+setTimeout(() => document.getElementById('splash').classList.add('hide'), 1900);
+
+// ── STATE ──
+let history = JSON.parse(localStorage.getItem('sp_history') || '[]');
 let currentMsg = '';
 let currentTicker = '';
+let chartInstance = null;
 
+// ── PAGES ──
 function showPage(page) {
   document.getElementById('page-form').classList.toggle('hidden', page !== 'form');
   document.getElementById('page-history').classList.toggle('active', page === 'history');
@@ -237,6 +474,111 @@ function showPage(page) {
   if (page === 'history') renderHistory();
 }
 
+// ── SIMULATED PRICE CHART ──
+// Generates a realistic-looking price series for the ticker
+function generatePriceSeries(seed, days = 30) {
+  let price = 100 + (seed % 400);
+  const prices = [];
+  for (let i = 0; i < days; i++) {
+    const change = (Math.sin(i * 0.7 + seed * 0.1) * 1.2) + (Math.random() - 0.48) * 2.5;
+    price = Math.max(price * (1 + change / 100), 1);
+    prices.push(parseFloat(price.toFixed(2)));
+  }
+  return prices;
+}
+
+function tickerSeed(tk) {
+  return tk.split('').reduce((a, c) => a + c.charCodeAt(0), 0);
+}
+
+function buildLabels(days = 30) {
+  const labels = [];
+  const d = new Date();
+  d.setDate(d.getDate() - days);
+  for (let i = 0; i < days; i++) {
+    d.setDate(d.getDate() + 1);
+    labels.push(d.toLocaleDateString('es-MX', { day: 'numeric', month: 'short' }));
+  }
+  return labels;
+}
+
+function updateChartTheme() {
+  if (!chartInstance) return;
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  const gridColor = isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.07)';
+  const textColor = isDark ? 'rgba(238,238,242,0.4)' : 'rgba(24,24,27,0.4)';
+  chartInstance.options.scales.x.ticks.color = textColor;
+  chartInstance.options.scales.y.ticks.color = textColor;
+  chartInstance.options.scales.x.grid.color = gridColor;
+  chartInstance.options.scales.y.grid.color = gridColor;
+  chartInstance.update();
+}
+
+function renderChart(tk) {
+  const seed = tickerSeed(tk);
+  const prices = generatePriceSeries(seed);
+  const labels = buildLabels();
+  const last = prices[prices.length - 1];
+  const first = prices[0];
+  const change = ((last - first) / first * 100).toFixed(2);
+  const isUp = change >= 0;
+  const accent = isUp
+    ? (html.getAttribute('data-theme') === 'dark' ? '#c6f135' : '#5a8a00')
+    : (html.getAttribute('data-theme') === 'dark' ? '#ff5a6e' : '#d63347');
+
+  document.getElementById('chartTicker').textContent = tk;
+  document.getElementById('chartPrice').textContent = `$${last.toFixed(2)}`;
+  const changeEl = document.getElementById('chartChange');
+  changeEl.textContent = `${isUp ? '+' : ''}${change}% (30d) · Simulado`;
+  changeEl.style.color = accent;
+
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  const gridColor = isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.07)';
+  const textColor = isDark ? 'rgba(238,238,242,0.4)' : 'rgba(24,24,27,0.4)';
+
+  const ctx = document.getElementById('priceChart').getContext('2d');
+  if (chartInstance) chartInstance.destroy();
+
+  const grad = ctx.createLinearGradient(0, 0, 0, 160);
+  grad.addColorStop(0, isUp ? 'rgba(198,241,53,0.22)' : 'rgba(255,90,110,0.22)');
+  grad.addColorStop(1, 'rgba(0,0,0,0)');
+
+  chartInstance = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{
+        data: prices,
+        borderColor: accent,
+        borderWidth: 2,
+        pointRadius: 0,
+        tension: 0.4,
+        fill: true,
+        backgroundColor: grad,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false }, tooltip: {
+        callbacks: { label: ctx => `$${ctx.parsed.y.toFixed(2)}` },
+        backgroundColor: isDark ? '#1d1e28' : '#fff',
+        titleColor: isDark ? '#eeeef2' : '#18181b',
+        bodyColor: accent,
+        borderColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)',
+        borderWidth: 1,
+      }},
+      scales: {
+        x: { grid: { color: gridColor }, ticks: { color: textColor, maxTicksLimit: 5, font: { size: 10, family: 'DM Mono' } } },
+        y: { grid: { color: gridColor }, ticks: { color: textColor, maxTicksLimit: 4, font: { size: 10, family: 'DM Mono' }, callback: v => `$${v.toFixed(0)}` } }
+      },
+      animation: { duration: 800 }
+    }
+  });
+
+  document.getElementById('chartCard').classList.add('show');
+}
+
+// ── GENERATE ──
 function generate() {
   const tk = document.getElementById('tk').value.trim().toUpperCase();
   const rk = document.getElementById('rk').value;
@@ -249,86 +591,86 @@ function generate() {
   const today = new Date();
   const exp = new Date(today);
   exp.setDate(today.getDate() + 7);
-  const expStr = exp.toLocaleDateString('es-MX', {day:'numeric', month:'short', year:'numeric'});
+  const expStr = exp.toLocaleDateString('es-MX', { day: 'numeric', month: 'short', year: 'numeric' });
 
-  currentMsg = `Analiza la acción ${tk} y dame una recomendación de opción semanal (expiración máxima ${expStr}). Tipo: ${tipo}. Perfil de riesgo: ${rk}. Capital: ${cap}. Contratos: ${ct}. Incluye: 1) tendencia y sentimiento del mercado, 2) recomendación clara de CALL o PUT con justificación, 3) strike exacto sugerido, 4) fecha de expiración específica, 5) prima estimada y costo total para ${ct} contratos, 6) análisis técnico (RSI, soporte y resistencia), 7) catalizadores importantes de la semana, 8) nivel de riesgo del 1 al 10, 9) take profit +50% y stop loss -50%, 10) paso a paso para ejecutar en thinkorswim paperMoney.`;
+  currentMsg = `Analiza la acción ${tk} y dame una recomendación de opción semanal (expiración máxima ${expStr}). Tipo: ${tipo}. Perfil de riesgo: ${rk}. Capital disponible: ${cap}. Contratos: ${ct}. Incluye: 1) tendencia actual y sentimiento del mercado, 2) recomendación clara de CALL o PUT con justificación detallada, 3) strike exacto sugerido, 4) fecha de expiración específica, 5) prima estimada y costo total para ${ct} contratos, 6) análisis técnico (RSI, soporte y resistencia clave), 7) catalizadores fundamentales importantes de esta semana, 8) nivel de riesgo del 1 al 10 con explicación, 9) take profit en +50% y stop loss en -50% del valor de la prima, 10) paso a paso para ejecutar en thinkorswim paperMoney. Por favor sé específico con los precios y fechas.`;
 
+  renderChart(tk);
   document.getElementById('resultCard').classList.add('show');
   document.getElementById('resultCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
+// ── OPEN CLAUDE ──
 function openClaude() {
-  const encoded = encodeURIComponent(currentMsg);
-  const url = `https://claude.ai/new?q=${encoded}`;
-  window.open(url, '_blank');
+  window.open(`https://claude.ai/new?q=${encodeURIComponent(currentMsg)}`, '_blank');
 }
 
+// ── COPY ──
 function copyMsg() {
-  navigator.clipboard.writeText(currentMsg).then(() => {
-    const btn = document.getElementById('btnCopy');
-    btn.textContent = '✅ COPIADO';
-    setTimeout(() => btn.textContent = '📋 O COPIA EL MENSAJE MANUALMENTE', 2000);
-  }).catch(() => {
+  const btn = document.getElementById('btnCopy');
+  const fallback = () => {
     const ta = document.createElement('textarea');
-    ta.value = currentMsg;
-    document.body.appendChild(ta);
-    ta.select();
-    document.execCommand('copy');
-    document.body.removeChild(ta);
-    const btn = document.getElementById('btnCopy');
-    btn.textContent = '✅ COPIADO';
-    setTimeout(() => btn.textContent = '📋 O COPIA EL MENSAJE MANUALMENTE', 2000);
-  });
+    ta.value = currentMsg; document.body.appendChild(ta); ta.select();
+    document.execCommand('copy'); document.body.removeChild(ta);
+  };
+  (navigator.clipboard ? navigator.clipboard.writeText(currentMsg) : Promise.reject())
+    .catch(fallback)
+    .finally(() => {
+      btn.textContent = '✅ COPIADO';
+      setTimeout(() => btn.textContent = '📋 COPIAR MENSAJE MANUALMENTE', 2200);
+    });
 }
 
+// ── SAVE HISTORY ──
 function saveHistory() {
   const rec = document.getElementById('h_rec').value.trim().toUpperCase();
   const strike = document.getElementById('h_strike').value.trim();
   if (!rec) { alert('Escribe CALL o PUT para guardar'); return; }
-
   history.push({
-    ticker: currentTicker,
-    rec, strike,
+    ticker: currentTicker, rec, strike,
     riesgo: document.getElementById('rk').value,
     contratos: document.getElementById('ct').value,
     date: new Date().toLocaleDateString('es-MX')
   });
   if (history.length > 30) history.shift();
-  localStorage.setItem('optionsHistory', JSON.stringify(history));
-
+  localStorage.setItem('sp_history', JSON.stringify(history));
   document.getElementById('h_rec').value = '';
   document.getElementById('h_strike').value = '';
   document.getElementById('resultCard').classList.remove('show');
-
+  document.getElementById('chartCard').classList.remove('show');
   const btn = event.target;
   btn.textContent = '✅ GUARDADO';
-  setTimeout(() => btn.textContent = '💾 GUARDAR EN HISTORIAL', 2000);
+  setTimeout(() => btn.textContent = '💾 GUARDAR EN HISTORIAL', 2200);
 }
 
+// ── RENDER HISTORY ──
 function renderHistory() {
   const el = document.getElementById('historyContent');
   if (!history.length) {
-    el.innerHTML = '<div class="history-empty">Sin análisis guardados aún.<br>Genera tu primer análisis para verlo aquí.</div>';
+    el.innerHTML = '<div class="hist-empty">Sin análisis guardados.<br>Genera tu primer análisis para verlo aquí.</div>';
     return;
   }
   el.innerHTML = history.slice().reverse().map(h => `
     <div class="hist-item">
-      <div class="hist-top">
+      <div class="hist-row">
         <div class="hist-ticker">${h.ticker}</div>
         <div class="hist-date">${h.date}</div>
       </div>
       <div class="hist-tags">
-        <span class="hist-tag ${h.rec==='CALL'?'tag-call':'tag-put'}">${h.rec}</span>
-        ${h.strike ? `<span class="hist-tag tag-info">Strike: ${h.strike}</span>` : ''}
-        <span class="hist-tag tag-info">${h.contratos} contratos</span>
-        <span class="hist-tag tag-info">${h.riesgo}</span>
+        <span class="tag ${h.rec === 'CALL' ? 'tag-call' : 'tag-put'}">${h.rec}</span>
+        ${h.strike ? `<span class="tag tag-info">Strike: ${h.strike}</span>` : ''}
+        <span class="tag tag-info">${h.contratos} contratos</span>
+        <span class="tag tag-info">${h.riesgo}</span>
       </div>
     </div>`).join('');
 }
 
+// ── KEYBOARD ──
 document.getElementById('tk').addEventListener('input', e => { e.target.value = e.target.value.toUpperCase(); });
-document.getElementById('tk').addEventListener('keydown', e => { if(e.key==='Enter') generate(); });
-if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(()=>{});
+document.getElementById('tk').addEventListener('keydown', e => { if (e.key === 'Enter') generate(); });
+
+// ── SERVICE WORKER ──
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
 </script>
 </body>
 </html>

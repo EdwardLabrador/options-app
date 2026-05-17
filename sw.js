@@ -1,4 +1,4 @@
-const CACHE = 'optionsai-v1';
+const CACHE = 'strykepro-v1';
 const ASSETS = ['/', '/index.html', '/manifest.json'];
 
 self.addEventListener('install', e => {
@@ -16,9 +16,8 @@ self.addEventListener('activate', e => {
 self.addEventListener('fetch', e => {
   if (e.request.url.includes('api.anthropic.com') ||
       e.request.url.includes('fonts.googleapis.com') ||
-      e.request.url.includes('fonts.gstatic.com')) {
-    return;
-  }
+      e.request.url.includes('fonts.gstatic.com') ||
+      e.request.url.includes('cdn.jsdelivr.net')) return;
   e.respondWith(
     caches.match(e.request).then(r => r || fetch(e.request).catch(() => caches.match('/index.html')))
   );
